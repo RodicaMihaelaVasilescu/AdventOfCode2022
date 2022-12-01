@@ -21,12 +21,11 @@ int main()
 
   string line;
   vector<int> numbers;
-  int sum = 0, maxSum = 0;
+  int sum = 0;
 
   while (getline(cin, line)) {
     if (line == "")
     {
-      maxSum = max(maxSum, sum);
       numbers.push_back(sum);
       sum = 0;
     }
