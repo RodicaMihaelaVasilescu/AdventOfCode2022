@@ -34,6 +34,7 @@ int main()
       sum += stoi(line);
     }
   }
+
   numbers.push_back(sum);
 
   sort(numbers.rbegin(), numbers.rend());
