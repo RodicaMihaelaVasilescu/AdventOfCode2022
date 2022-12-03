@@ -10,9 +10,27 @@
 #include <set>
 #include <regex>
 #include <sstream>
+#include <numeric>
 #include <bitset>
 
 using namespace std;
+
+int prioritySum(vector<char> items)
+{
+  int sum = 0;
+  for (auto i : items)
+  {
+    if (i >= 'a' && i <= 'z')
+    {
+      sum += i - 'a' + 1;
+    }
+    else
+    {
+      sum += i - 'A' + 1 + 26;
+    }
+  }
+  return sum;
+}
 
 int main()
 {
@@ -22,12 +40,9 @@ int main()
   string rucksack;
   vector<char> itemsPart1, itemsPart2;
   map<int, int> fr, fr2;
-  int index = 0;
-
-  int elvesNumber = 3;
+  int index = 0, elvesNumber = 3;
 
   while (cin >> rucksack) {
-
     // part 1
     fr.clear();
     for (int i = 0; i < rucksack.size() / 2; i++)
@@ -48,46 +63,21 @@ int main()
     {
       fr2.clear();
     }
-    for (int i = 0; i < rucksack.size(); i++)
+    for (auto item : rucksack)
     {
-      if (fr2[rucksack[i]] == index % elvesNumber)
+      if (fr2[item] == index % elvesNumber)
       {
-        fr2[rucksack[i]] = index % elvesNumber + 1;
+        fr2[item] = index % elvesNumber + 1;
       }
-      if (fr2[rucksack[i]] == elvesNumber)
+      if (fr2[item] == elvesNumber)
       {
-        itemsPart2.push_back(rucksack[i]);
+        itemsPart2.push_back(item);
         break;
       }
     }
     index++;
   }
 
-  int sum = 0, sum2 = 0;
-  for (auto i : itemsPart1)
-  {
-    if (i >= 'a' && i <= 'z')
-    {
-      sum += i - 'a' + 1;
-    }
-    else
-    {
-      sum += i - 'A' + 1 + 26;
-    }
-  }
-
-  for (auto i : itemsPart2)
-  {
-    if (i >= 'a' && i <= 'z')
-    {
-      sum2 += i - 'a' + 1;
-    }
-    else
-    {
-      sum2 += i - 'A' + 1 + 26;
-    }
-  }
-
-  cout << "Part1: " << sum << endl;
-  cout << "Part2: " << sum2 << endl;
+  cout << "Part1: " << prioritySum(itemsPart1) << endl;
+  cout << "Part2: " << prioritySum(itemsPart2) << endl;
 }
