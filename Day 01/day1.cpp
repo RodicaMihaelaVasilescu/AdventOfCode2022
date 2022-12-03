@@ -14,32 +14,69 @@
 
 using namespace std;
 
+int prioritySum(vector<char> items)
+{
+  int sum = 0;
+  for (auto i : items)
+  {
+    if (i >= 'a' && i <= 'z')
+    {
+      sum += i - 'a' + 1;
+    }
+    else
+    {
+      sum += i - 'A' + 1 + 26;
+    }
+  }
+  return sum;
+}
+
 int main()
 {
   freopen("in.txt", "r", stdin);
   freopen("out.txt", "w", stdout);
 
-  string line;
-  vector<int> numbers;
-  int sum = 0;
+  string rucksack;
+  vector<char> itemsPart1, itemsPart2;
+  map<int, int> fr, fr2;
+  int index = 0, elvesNumber = 3;
 
-  while (getline(cin, line)) {
-    if (line == "")
+  while (cin >> rucksack) {
+    // part 1
+    fr.clear();
+    for (int i = 0; i < rucksack.size() / 2; i++)
     {
-      numbers.push_back(sum);
-      sum = 0;
+      fr[rucksack[i]] = 1;
     }
-    else
+
+    for (int i = rucksack.size() / 2; i < rucksack.size(); i++)
     {
-      sum += stoi(line);
+      if (fr[rucksack[i]] != 0) {
+        itemsPart1.push_back(rucksack[i]);
+        break;
+      }
     }
+
+    //part 2
+    if (index % elvesNumber == 0)
+    {
+      fr2.clear();
+    }
+    for (auto item : rucksack)
+    {
+      if (fr2[item] == index % elvesNumber)
+      {
+        fr2[item] = index % elvesNumber + 1;
+      }
+      if (fr2[item] == elvesNumber)
+      {
+        itemsPart2.push_back(item);
+        break;
+      }
+    }
+    index++;
   }
-  numbers.push_back(sum);
 
-  sort(numbers.rbegin(), numbers.rend());
-
-  // the Elf carrying the most Calories
-  cout << "Part 1: " << numbers[0] << endl;
-  // the top three Elves carrying the most Calories
-  cout << "Part 2: " << accumulate(numbers.begin(), numbers.begin() + 3, 0) << endl;
+  cout << "Part1: " << prioritySum(itemsPart1) << endl;
+  cout << "Part2: " << prioritySum(itemsPart2) << endl;
 }
