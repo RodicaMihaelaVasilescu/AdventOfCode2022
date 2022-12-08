@@ -6,4 +6,8 @@
 ##### [--- Day 4: Camp Cleanup ---](https://adventofcode.com/2022/day/4) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2004/day4.cpp)
 ##### [--- Day 5: Supply Stacks ---](https://adventofcode.com/2022/day/5) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2005/day5.cpp)
 ##### [--- Day 6: Tuning Trouble ---](https://adventofcode.com/2022/day/6) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2006/day6.cpp)
+##### [--- Day 7: No Space Left On Device ---](https://adventofcode.com/2022/day/7) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2007/day7.cs)
+##### [--- Day 8: Treetop Tree House ---](https://adventofcode.com/2022/day/8) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2008/day8.cpp)
+
+
 ![AdventOfCode](https://user-images.githubusercontent.com/41547572/204596284-95a2ad70-57a0-48ee-b32b-93be4d26ecb5.png)
