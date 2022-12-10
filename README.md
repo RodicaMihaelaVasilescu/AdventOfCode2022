@@ -8,6 +8,7 @@
 ##### [--- Day 6: Tuning Trouble ---](https://adventofcode.com/2022/day/6) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2006/day6.cpp)
 ##### [--- Day 7: No Space Left On Device ---](https://adventofcode.com/2022/day/7) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2007/day7.cs)
 ##### [--- Day 8: Treetop Tree House ---](https://adventofcode.com/2022/day/8) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2008/day8.cpp)
-
+##### [--- Day 9: Rope Bridge ---](https://adventofcode.com/2022/day/9) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2009/day9.cs)
+##### [--- Day 10: Cathode-Ray Tube ---](https://adventofcode.com/2022/day/10) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2010/day10.cpp)
 
 ![AdventOfCode](https://user-images.githubusercontent.com/41547572/204596284-95a2ad70-57a0-48ee-b32b-93be4d26ecb5.png)
