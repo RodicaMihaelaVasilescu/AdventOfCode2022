@@ -12,10 +12,10 @@
 #include <sstream>
 #include <numeric>
 #include <bitset>
-
 #include <iostream>
 #include <algorithm>
-#include<numeric>// for C++17
+#include <numeric>
+
 using namespace std;
 
 vector<string> split(string line, string delimiters = ",./:;= qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM")
@@ -68,7 +68,7 @@ vector<unsigned long long int> split2(string line, string delimiters = ",./;:= q
   return words;
 }
 
-unsigned long long int LCM(unsigned long long int a, unsigned long long int b) // The function runs recursive in nature to return GCD.
+unsigned long long int LCM(unsigned long long int a, unsigned long long int b)
 {
   unsigned long long  lcm = 1;
   if (a > b)
@@ -89,59 +89,15 @@ struct monkey
   int index;
   vector<unsigned long long int> startingItems;
   char operationName;
-  unsigned long long int operationValue;
-  unsigned long long int divisibleBy;
-  unsigned long long int ifTrue;
-  unsigned long long int ifFalse;
-  unsigned long long int inspectedItemsCount = 0;
+  int operationValue;
+  int divisibleBy;
+  int ifTrue;
+  int ifFalse;
+  int inspectedItemsCount = 0;
 };
 
-int main()
+unsigned long long int solve(vector<monkey> monkeys, int n, unsigned long long int lcm = 0)
 {
-  freopen("in.txt", "r", stdin);
-  freopen("out.txt", "w", stdout);
-
-  string line;
-  vector<monkey> monkeys;
-  int monkeyIndex = 0;
-
-  while (getline(cin, line)) {
-    if (line != "")
-    {
-      monkey m;
-      m.index = monkeyIndex;
-      getline(cin, line);
-      m.startingItems = split2(line);
-      getline(cin, line);
-      auto words = split(line);
-      m.operationName = words[0][0];
-      if (words.size() == 1)
-      {
-        m.operationValue = -1;
-      }
-      else
-      {
-        m.operationValue = stoi(words[1]);
-      }
-      getline(cin, line);
-      m.divisibleBy = split2(line)[0];
-      getline(cin, line);
-      m.ifTrue = split2(line)[0];
-      getline(cin, line);
-      m.ifFalse = split2(line)[0];
-      monkeys.push_back(m);
-      monkeyIndex++;
-    }
-  }
-
-  int n = 10000;
-  unsigned long long int lcm = 1;
-
-  for (auto monkey : monkeys)
-  {
-    lcm = LCM(monkey.divisibleBy, lcm);
-  }
-
   map<unsigned long long int, unsigned long long int>frequency;
 
   for (int index = 0; index < n; index++)
@@ -178,7 +134,7 @@ int main()
           }
         }
 
-        auto division = newItem % lcm;
+        unsigned long long int division = lcm != 0 ? newItem % lcm : newItem / 3;
 
         if (division % m.divisibleBy == 0)
         {
@@ -194,8 +150,6 @@ int main()
     }
   }
 
-
-
   vector<unsigned long long int> items;
   for (auto monkey : monkeys)
   {
@@ -203,5 +157,44 @@ int main()
   }
 
   sort(items.rbegin(), items.rend());
-  cout << "Part 2: " << items[0] * items[1];
+  return items[0] * items[1];
+}
+
+int main()
+{
+  freopen("in.txt", "r", stdin);
+  freopen("out.txt", "w", stdout);
+
+  string line;
+  vector<monkey> monkeys;
+
+  while (getline(cin, line)) {
+    if (line != "")
+    {
+      monkey m;
+      m.index = split2(line)[0];
+      getline(cin, line);
+      m.startingItems = split2(line);
+      getline(cin, line);
+      auto words = split(line);
+      m.operationName = words[0][0];
+      m.operationValue = words.size() == 1 ? -1 : stoi(words[1]);
+      getline(cin, line);
+      m.divisibleBy = split2(line)[0];
+      getline(cin, line);
+      m.ifTrue = split2(line)[0];
+      getline(cin, line);
+      m.ifFalse = split2(line)[0];
+      monkeys.push_back(m);
+    }
+  }
+
+  unsigned long long int lcm = 1;
+  for (auto monkey : monkeys)
+  {
+    lcm = LCM(monkey.divisibleBy, lcm);
+  }
+
+  cout << "Part 1: " << solve(monkeys, 20) << endl;
+  cout << "Part 2: " << solve(monkeys, 10000, lcm) << endl;
 }
