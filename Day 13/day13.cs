@@ -3,19 +3,10 @@ namespace AdventOfCode
 {
   public class Node
   {
-    public int? Number;
+    public int? Value;
     public Node Parent;
     public List<Node> Children = new List<Node>();
-    public string Name { get; set; }
-    public Node()
-    {
-
-    }
-    public Node(int n, Node parent)
-    {
-      Number = n;
-      Parent = parent;
-    }
+    public string Name;
   }
 
   public class Program
@@ -23,49 +14,10 @@ namespace AdventOfCode
     public static string inputFile = "../../../in.txt";
     public static string outputFile = "../../../out.txt";
 
-    public static List<string> split(string line, string delimiters = ",./;= ")
-    {
-      List<string> words = new List<string>();
-      if (string.IsNullOrEmpty(line))
-      {
-        return words;
-      }
-
-      string[] split = line.Split(delimiters.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-      return split.ToList();
-    }
-
-    public static List<int> split2(string line, string delimiters = ",./;= ")
-    {
-      List<int> ints = new List<int>();
-      string[] split = line.Split(delimiters.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-      foreach (var word in split.ToList())
-      {
-        ints.Add(int.Parse(word));
-      }
-      return ints;
-    }
-
-    public class Pair
-    {
-      public Node First;
-      public Node Second;
-
-      public Pair(Node node1, Node node2)
-      {
-        First = node1;
-        Second = node2;
-      }
-      public Pair()
-      {
-
-      }
-    }
-
     static int Main(string[] args)
     {
-      List<Pair> pairs = new List<Pair>();
-      List<Node> nodesPart2 = new List<Node>();
+      List<Node> allPackets = new List<Node>();
+      int sumPart1 = 0, index = 0;
 
       using (StreamReader stream = new StreamReader("../../../in.txt"))
       {
@@ -73,91 +25,59 @@ namespace AdventOfCode
         List<string> words = new List<string>();
         while ((line = stream.ReadLine()) != null)
         {
+          index++;
+
+          var tree1 = GetTree(line);
+          allPackets.Add(tree1);
+
           string line2 = stream.ReadLine();
-          var pair = new Pair();
-          pair.First = GetTree(line);
-          pair.Second = GetTree(line2);
-          pairs.Add(pair);
+          var tree2 = GetTree(line2);
+          allPackets.Add(tree2);
 
-          nodesPart2.Add(pair.First);
-          nodesPart2.Add(pair.Second);
-          line = stream.ReadLine();
-        }
-
-
-        int sumPart1 = 0;
-        for (int i = 0; i < pairs.Count(); i++)
-        {
-          var isInRightOrder = IsInRightOrder(pairs[i].First, pairs[i].Second);
+          var isInRightOrder = IsInRightOrder(tree1, tree2);
           if (isInRightOrder != null && isInRightOrder.Value == true)
           {
-            sumPart1 += i + 1;
+            sumPart1 += index;
           }
+
+          line = stream.ReadLine(); // read empty line
         }
+
         StreamWriter file = new StreamWriter(outputFile);
         file.WriteLine($"Part 1: {sumPart1} ");
 
-
         //part 2
-        nodesPart2.Add(GetTree("[[2]]"));
-        nodesPart2.Add(GetTree("[[6]]"));
+        allPackets.Add(GetTree("[[2]]"));
+        allPackets.Add(GetTree("[[6]]"));
 
-        for (int i = 0; i < nodesPart2.Count(); i++)
+        for (int i = 0; i < allPackets.Count(); i++)
         {
-          for (int j = i + 1; j < nodesPart2.Count(); j++)
+          for (int j = i + 1; j < allPackets.Count(); j++)
           {
-            bool? val = IsInRightOrder(nodesPart2[i], nodesPart2[j]);
+            bool? val = IsInRightOrder(allPackets[i], allPackets[j]);
             if (val.HasValue && val == false)
             {
-              var aux = nodesPart2[i];
-              nodesPart2[i] = nodesPart2[j];
-              nodesPart2[j] = aux;
+              var aux = allPackets[i];
+              allPackets[i] = allPackets[j];
+              allPackets[j] = aux;
             }
           }
         }
 
-        int index1 = 0;
-        int index2 = 0;
+        int index1 = allPackets.IndexOf(allPackets.First(_ => _.Name == "[[2]]")) + 1;
+        int index2 = allPackets.IndexOf(allPackets.First(_ => _.Name == "[[6]]")) + 1;
 
-        for (int i = 0; i < nodesPart2.Count(); i++)
-        {
-          if (nodesPart2[i].Name == "[[2]]")
-          {
-            index1 = i+1;
-          }
-          if (nodesPart2[i].Name == "[[6]]")
-          {
-            index2 = i+1;
-          }
-        }
-
-        file.WriteLine($"Part 2: {index1 * index2} ");
+        file.WriteLine($"Part 2: {index1 * index2}");
         file.Close();
         return 0;
       }
     }
 
-    private static bool IsAscending(List<int> i1, List<int> i2)
-    {
-      for (int i = 0; i < Math.Min(i1.Count(), i2.Count()); i++)
-      {
-        if (i1[i] < i2[i])
-        {
-          return true;
-        }
-        if (i1[i] > i2[i])
-        {
-          return false;
-        }
-      }
-      return i1.Count() < i2.Count();
-    }
-
 
     private static bool? IsInRightOrder(Node i1, Node i2)
     {
-      // compare lists
-      if (i1.Number == null && i2.Number == null)
+      // If both values are lists, compare the first value of each list, then the second value, and so on
+      if (i1.Value == null && i2.Value == null)
       {
         for (int i = 0; i < Math.Min(i1.Children.Count(), i2.Children.Count()); i++)
         {
@@ -184,13 +104,14 @@ namespace AdventOfCode
           return null;
         }
       }
-      else if (i1.Number != null && i2.Number != null)
+      // If both values are integers, the lower integer should come first
+      else if (i1.Value != null && i2.Value != null)
       {
-        if (i1.Number < i2.Number)
+        if (i1.Value < i2.Value)
         {
           return true;
         }
-        else if (i1.Number > i2.Number)
+        else if (i1.Value > i2.Value)
         {
           return false;
         }
@@ -199,18 +120,20 @@ namespace AdventOfCode
           return null;
         }
       }
-      else if (i1.Number != null)
+      // If exactly one value is an integer,
+      // convert the integer to a list which contains that integer as its only value
+      else if (i1.Value != null)
       {
-        var node = new Node((int)i1.Number, i1);
-        i1.Number = null;
+        var node = new Node { Value = i1.Value.Value, Parent = i1 };
+        i1.Value = null;
         i1.Children.Add(node);
         return IsInRightOrder(i1, i2);
       }
-      else if (i2.Number != null)
+      else if (i2.Value != null)
       {
-        var node = new Node((int)i2.Number, i2.Parent);
+        var node = new Node { Value = (int)i2.Value, Parent = i2.Parent };
         i2.Children.Add(node);
-        i2.Number = null;
+        i2.Value = null;
         return IsInRightOrder(i1, i2);
       }
       return null;
@@ -218,17 +141,12 @@ namespace AdventOfCode
 
     private static Node GetTree(string s)
     {
-      if (s == "[1,1,3,1,1]")
-      {
-        int bkp = 0;
-      }
       var root = new Node();
       root.Name = s;
       s = s.Substring(1, s.Count() - 2);
       var node = root;
       for (int i = 0; i < s.Count();)
       {
-        char ch = s[i];
         while (s[i] == '[')
         {
           i++;
@@ -240,21 +158,20 @@ namespace AdventOfCode
         string n = String.Empty;
         if (i < s.Count() && (Char.IsDigit(s[i])))
         {
-          ch = s[i];
           while (i < s.Count() && Char.IsDigit(s[i]))
           {
             n += s[i];
             i++;
             if (i < s.Count() && s[i] == ',')
             {
-              node.Children.Add(new Node(Convert.ToInt32(n), node));
+              node.Children.Add(new Node { Value = Convert.ToInt32(n), Parent = node });
               n = String.Empty;
               i++;
             }
           }
           if (!string.IsNullOrEmpty(n))
           {
-            node.Children.Add(new Node(Convert.ToInt32(n), node));
+            node.Children.Add(new Node { Value = Convert.ToInt32(n), Parent = node });
           }
         }
 
