@@ -44,33 +44,32 @@ struct point
   int y;
 };
 
-map<pair<int, int>, char> m;
-map<pair<int, int>, char> m2;
+map<pair<int, int>, char> matrix, initialMatrix;
 
 void fall(point& drop)
 {
-  m[{drop.x, drop.y}] = 0;
-  if (m[{drop.x + 1, drop.y }] == 0)
+  matrix[{drop.x, drop.y}] = 0;
+  if (matrix[{drop.x + 1, drop.y }] == 0)
   {
     drop.x++;
   }
-  else if (m[{drop.x + 1, drop.y - 1 }] == 0)
+  else if (matrix[{drop.x + 1, drop.y - 1 }] == 0)
   {
     drop.x++;
     drop.y--;
   }
-  else if (m[{drop.x + 1, drop.y + 1 }] == 0)
+  else if (matrix[{drop.x + 1, drop.y + 1 }] == 0)
   {
     drop.x++;
     drop.y++;
   }
-  m[{drop.x, drop.y}] = 'o';
+  matrix[{drop.x, drop.y}] = 'o';
 }
 
 
 bool canFall(point drop)
 {
-  return m[{drop.x + 1, drop.y }] == 0 || m[{drop.x + 1, drop.y - 1 }] == 0 || m[{drop.x + 1, drop.y + 1 }] == 0;
+  return matrix[{drop.x + 1, drop.y }] == 0 || matrix[{drop.x + 1, drop.y - 1 }] == 0 || matrix[{drop.x + 1, drop.y + 1 }] == 0;
 }
 
 void main()
@@ -98,7 +97,7 @@ void main()
         {
           Min.x = min(Min.x, k);
           Max.x = max(Max.x, k);
-          m[{k, start.x}] = '#';
+          matrix[{k, start.x}] = '#';
         }
       }
       else if (start.y == end.y)
@@ -107,14 +106,14 @@ void main()
         {
           Min.y = min(Min.y, k);
           Max.y = max(Max.y, k);
-          m[{start.y, k}] = '#';
+          matrix[{start.y, k}] = '#';
         }
       }
       start = end;
     }
   }
 
-  m2 = m;
+  initialMatrix = matrix;
   vector<point> drops;
   bool overflow = false;
   while (!overflow)
@@ -133,16 +132,15 @@ void main()
     drops.push_back(drop);
   }
 
-  m = m2;
+  matrix = initialMatrix;
   drops.clear();
   Max.x += 2;
-  for (long i = -10000; i <= 10000; i++)
+  for (int i = -10000; i <= 10000; i++)
   {
-    m[{ Max.x, i}] = '#';
+    matrix[{ Max.x, i}] = '#';
   }
 
-  overflow = false;
-  while (!overflow)
+  while (true)
   {
     point drop = point{ 0,500 };
     while (canFall(drop))
