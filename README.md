@@ -10,5 +10,9 @@
 ##### [--- Day 8: Treetop Tree House ---](https://adventofcode.com/2022/day/8) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2008/day8.cpp)
 ##### [--- Day 9: Rope Bridge ---](https://adventofcode.com/2022/day/9) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2009/day9.cs)
 ##### [--- Day 10: Cathode-Ray Tube ---](https://adventofcode.com/2022/day/10) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2010/day10.cpp)
+##### [--- Day 11: Monkey in the Middle ---](https://adventofcode.com/2022/day/11) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2011/day11.cpp)
+##### [--- Day 12: Hill Climbing Algorithm ---](https://adventofcode.com/2022/day/12) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2012/day12.cpp)
+##### [--- Day 13: Distress Signal ---](https://adventofcode.com/2022/day/13) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2014/day13.cs)
+##### [--- Day 14: Regolith Reservoir ---](https://adventofcode.com/2022/day/14) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2014/day14.cpp)
 
 ![AdventOfCode](https://user-images.githubusercontent.com/41547572/204596284-95a2ad70-57a0-48ee-b32b-93be4d26ecb5.png)
