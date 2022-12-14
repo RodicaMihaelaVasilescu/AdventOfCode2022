@@ -15,56 +15,6 @@
 
 using namespace std;
 
-int binaryToDecimal(string binaryNumber)
-{
-  return stoi(binaryNumber, 0, 2);
-}
-
-string decimalToBinary(int n)
-{
-  string binary = std::bitset<8>(n).to_string();
-  return binary;
-}
-
-void replaceAll(string& s, const string& search, const string& replace)
-{
-  for (size_t pos = 0; ; pos += replace.length())
-  {
-    // Locate the substring to replace
-    pos = s.find(search, pos);
-    if (pos == string::npos) break;
-    // Replace by erasing and inserting
-    s.erase(pos, search.length());
-    s.insert(pos, replace);
-  }
-}
-vector<string> split(string line, string delimiters = ",./;= ")
-{
-  vector<string> words;
-  if (line.empty())
-  {
-    return words;
-  }
-
-  int index = line.find_first_of(delimiters);
-  if (!line.substr(0, index).empty())
-  {
-    words.push_back(line.substr(0, index));
-  }
-
-  while (index != -1) {
-    index++;
-    line = line.substr(index, line.length() - index);
-    index = line.find_first_of(delimiters);
-    auto newWord = line.substr(0, index);
-    if (!newWord.empty())
-    {
-      words.push_back(newWord);
-    }
-  }
-  return words;
-}
-
 vector<int> split2(string line, string delimiters = ",./;= ")
 {
   vector<int> words;
@@ -87,45 +37,19 @@ vector<int> split2(string line, string delimiters = ",./;= ")
   }
   return words;
 }
-struct coord
+
+struct point
 {
   int x;
   int y;
 };
 
-struct line
-{
-  vector<coord> v;
-};
+map<pair<int, int>, char> m;
+map<pair<int, int>, char> m2;
 
-int xmin = 999999, xmax = 0, ymin = 99999, ymax = 0;
-void print(map<pair<int, int>, char>m)
+void fall(point& drop)
 {
-  for (int i = 0; i < 15; i++)
-  {
-    for (int j = 450; j < 550; j++)
-    {
-      if (i == 0 && j == 500)
-      {
-        cout << "+";
-      }
-      else  if (m[{i, j}] == 0)
-      {
-        cout << " ";
-      }
-      else
-      {
-        cout << m[{i, j}];
-      }
-    }
-    cout << endl;
-  }
-  cout << endl;
-}
-
-
-coord fall(map<pair<int, int>, char>m, coord drop)
-{
+  m[{drop.x, drop.y}] = 0;
   if (m[{drop.x + 1, drop.y }] == 0)
   {
     drop.x++;
@@ -140,7 +64,13 @@ coord fall(map<pair<int, int>, char>m, coord drop)
     drop.x++;
     drop.y++;
   }
-  return drop;
+  m[{drop.x, drop.y}] = 'o';
+}
+
+
+bool canFall(point drop)
+{
+  return m[{drop.x + 1, drop.y }] == 0 || m[{drop.x + 1, drop.y - 1 }] == 0 || m[{drop.x + 1, drop.y + 1 }] == 0;
 }
 
 void main()
@@ -148,103 +78,82 @@ void main()
   freopen("in.txt", "r", stdin);
   freopen("out.txt", "w", stdout);
 
-  string s;
-  vector<line> v;
-  //vector<int> fr(1000, 0);
-  //vector<vector<int>> vec(1001, vector<int>(1001, 0));
+  string line;
 
-  while (getline(cin, s)) {
-    if (s == "")
-    {
+  point Min = point{ INT_MAX,INT_MAX };
+  point Max = point{ 0,0 };
 
-    }
-    else
+  while (getline(cin, line)) {
+
+    auto words = split2(line, ", ->");
+    point start = point{ words[0], words[1] };
+
+    for (int i = 2; i < words.size() - 1; i += 2)
     {
-      auto words = split2(s, ", ->");
-      auto l = line();
-      for (int i = 0; i < words.size(); i++)
+      point end = point{ words[i] , words[i + 1] };
+
+      if (start.x == end.x)
       {
-        l.v.push_back(coord{ words[i],words[i + 1] });
-        i++;
+        for (int k = min(start.y, end.y); k <= max(start.y, end.y); k++)
+        {
+          Min.x = min(Min.x, k);
+          Max.x = max(Max.x, k);
+          m[{k, start.x}] = '#';
+        }
       }
-      v.push_back(l);
+      else if (start.y == end.y)
+      {
+        for (int k = min(start.x, end.x); k <= max(start.x, end.x); k++)
+        {
+          Min.y = min(Min.y, k);
+          Max.y = max(Max.y, k);
+          m[{start.y, k}] = '#';
+        }
+      }
+      start = end;
     }
   }
 
-  map<pair<int, int>, char> m;
-
-  for (auto rock : v)
+  m2 = m;
+  vector<point> drops;
+  bool overflow = false;
+  while (!overflow)
   {
-    auto s = rock.v[0];
-    for (int k = 1; k < rock.v.size(); k++)
+    point drop = point{ 0,500 };
+    while (canFall(drop))
     {
-      auto e = rock.v[k];
-      if (s.x == e.x)
+      fall(drop);
+      if (drop.x >= Max.x)
       {
-        for (int i = min(s.y, e.y); i <= max(s.y, e.y); i++)
-        {
-          xmin = min(xmin, i);
-          xmax = max(xmax, i);
-          m[{i, s.x}] = '#';
-        }
+        overflow = true;
+        cout << "Part 1: " << drops.size() << endl;
+        break;
       }
-      else if (s.y == e.y)
-      {
-        for (int j = min(s.x, e.x); j <= max(s.x, e.x); j++)
-        {
-          ymin = min(ymin, j);
-          ymax = max(ymax, j);
-          m[{s.y, j}] = '#';
-        }
-      }
+    }
+    drops.push_back(drop);
+  }
 
-      s = e;
+  m = m2;
+  drops.clear();
+  Max.x += 2;
+  for (long i = -10000; i <= 10000; i++)
+  {
+    m[{ Max.x, i}] = '#';
+  }
+
+  overflow = false;
+  while (!overflow)
+  {
+    point drop = point{ 0,500 };
+    while (canFall(drop))
+    {
+      fall(drop);
+    }
+    drops.push_back(drop);
+    if (drop.x == 0 && drop.y == 500)
+    {
+      cout << "Part 2: " << drops.size() << endl;
+      break;
     }
   }
-
-  vector<coord> drops;
-  int j = 0;
-  while (j++ < 1000)
-  {
-
-    //cout << j << endl;
-
-    coord drop = coord{ 0,500 };
-    auto prevDrop = drop;
-    int i = 0;
-    do
-    {
-      i++;
-      if (drop.x > ymax)
-      {
-        int cnt = 0;
-        for (auto val : m)
-        {
-          if (val.second == '0')
-            cnt++;
-        }
-        //cout << cnt - 1 << endl;
-        cout << j - 1 << endl;
-        return;
-      }
-      prevDrop = drop;
-      drop = fall(m, drop);
-      m[{prevDrop.x, prevDrop.y}] = 0;
-      m[{drop.x, drop.y}] = 'o';
-      if (drop.x == 0 && drop.y == 500)
-      {
-        return;
-      }
-    } while (!(drop.x == prevDrop.x && drop.y == prevDrop.y));
-
-    //print(m);
-    drops.push_back(prevDrop);
-  }
-
-  //print(m);
-
-  //for (auto i : v)
-  //{
-  //  cout << i.x << "," << i.y << endl;
-  //}
 }
