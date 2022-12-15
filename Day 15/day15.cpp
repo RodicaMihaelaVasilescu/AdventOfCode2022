@@ -1,4 +1,3 @@
-// part 2 . Warning! the solution is not efficient. It takes over 5h of running in release mode
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
@@ -16,7 +15,13 @@
 
 using namespace std;
 
-vector<int> split2(string line, string delimiters = ",./;= ")
+const int LINE = 2000000;
+const int LIMIT = 4000000;
+
+//const int LINE = 10;
+//const int LIMIT = 20;
+
+vector<int> split(string line, string delimiters = ",./;= ")
 {
   vector<int> words;
 
@@ -47,49 +52,64 @@ struct Point
 
 struct Pair
 {
-  int id;
-  Point s, b;
-  int d;
+  Point sensor, beacon;
+  int distance;
 };
 
-
-static int getDist(Point p1, Point p2)
+int GetManhattanDistance(Point p1, Point p2)
 {
   return abs(p1.x - p2.x) + abs(p1.y - p2.y);
 }
 
-int LIMIT = 4000000;
-
-void getBeaconsLine(Pair item, string& sol, int line)
+void ExcludeNumbersOutOfLimits(int& n)
 {
-  if (item.s.y + item.d >= line)
+  if (n < 0)
   {
-    int dif = item.d - abs(item.s.y - line);
-    int a = item.s.x - dif;
-    int b = item.s.x + dif;
+    n = 0;
+  }
+  else if (n > LIMIT)
+  {
+    n = LIMIT;
+  }
+}
 
-    if (a < 0)
-	{
-      a = 0;
-	}
-    if (a > LIMIT)
-	{
-      a = LIMIT;
-	}
-    if (b < 0)
-	{
-      b = 0;
-	}
-    if (b > LIMIT)
-	{
-      b = LIMIT;
-	}
+void GetBeaconsLine(Pair item, set<int>& columnsWithoutBeacons, set<int>& beaconsToExclude, int line)
+{
+  if (item.sensor.y + item.distance >= line)
+  {
+    int dif = item.distance - abs(item.sensor.y - line);
+    int a = item.sensor.x - dif;
+    int b = item.sensor.x + dif;
+
     if (a > b)
     {
       return;
     }
-    sol.replace(a, b - a + 1, string(b - a + 1, '#'));
+    for (int i = a; i <= b; i++)
+    {
+      if (beaconsToExclude.find(i) == beaconsToExclude.end())
+      {
+        columnsWithoutBeacons.insert(i);
+      }
+    }
+  }
+}
 
+void GetBeaconsLine2(Pair item, string& solution, int line)
+{
+  if (item.sensor.y + item.distance >= line)
+  {
+    int dif = item.distance - abs(item.sensor.y - line);
+    int a = item.sensor.x - dif;
+    int b = item.sensor.x + dif;
+
+    ExcludeNumbersOutOfLimits(a);
+    ExcludeNumbersOutOfLimits(b);
+
+    if (a <= b)
+    {
+      solution.replace(a, b - a + 1, string(b - a + 1, '#'));
+    }
   }
 }
 
@@ -100,34 +120,42 @@ int main()
 
   string line;
   vector<Pair> sensors;
+  set<int> columnsWithoutBeacons;
+  set<int> beaconsToExclude;
 
-  int ind = 0;
-  while (getline(cin, line)) {
-    if (line != "")
+  for (int index = 0; (getline(cin, line)); index++) {
+    auto words = split(line, "qwertyuiopasdfghjklzxcvbnmS,:.= ");
+    Point sensor = Point{ words[0], words[1] };
+    Point beacon = Point{ words[2], words[3] };
+    sensors.push_back(Pair{ sensor, beacon, GetManhattanDistance(sensor, beacon) });
+    if (beacon.y == LINE)
     {
-      auto words = split2(line, "qwertyuiopasdfghjklzxcvbnmS,:.= ");
-      Point s = Point{ words[0], words[1] };
-      Point b = Point{ words[2], words[3] };
-      sensors.push_back(Pair{ ind, s, b, getDist(s, b) });
-      ind++;
+      beaconsToExclude.insert(beacon.y);
     }
   }
 
-  string full(LIMIT + 1, '#');
+  for (Pair const& item : sensors)
+  {
+    GetBeaconsLine(item, columnsWithoutBeacons, beaconsToExclude, LINE);
+  }
+  cout << "Part 1: " << columnsWithoutBeacons.size() << endl;
+
+  string fullLine(LIMIT + 1, '#');
+
   for (int i = 0; i < LIMIT; i++)
   {
-    string sol = string(LIMIT + 1, '.');
-    for (auto item : sensors)
+    string currentLine = string(LIMIT + 1, '.');
+    for (Pair const& item : sensors)
     {
-      getBeaconsLine(item, sol, i);
+      GetBeaconsLine2(item, currentLine, i);
     }
-    if (sol != full)
+    if (currentLine != fullLine)
     {
       for (int j = 0; j <= LIMIT; j++)
       {
-        if (sol[j] == '.')
+        if (currentLine[j] == '.')
         {
-          cout << i << " * " << j << " = " << 1ll * j * 4000000 + i;
+          cout << "Part 2: " << 1ll * j * 4000000 + i;
           return 0;
         }
       }
