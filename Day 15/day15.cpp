@@ -155,7 +155,7 @@ int main()
       {
         if (currentLine[j] == '.')
         {
-          cout << "Part 2: " << 1ll * j * 4000000 + i;
+          cout << "Part 2: " << 1ll * j * 4000000 + i << endl;
           return 0;
         }
       }
