@@ -138,7 +138,7 @@ int main()
         int indexesDifference = 2022 - previousShapeSimilarWith2022;
         int tallsDifference = talls[2022 - 1] - talls[previousShapeSimilarWith2022 - 1];
 
-        cout << "Part 2: " << talls[n % indexesDifference] + 1ll * n / indexesDifference * tallsDifference - 1;
+        cout << "Part 2: " << talls[n % indexesDifference] + n / indexesDifference * tallsDifference - 1;
 
         return 0;
       }
