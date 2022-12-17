@@ -16,7 +16,6 @@
 ##### [--- Day 14: Regolith Reservoir ---](https://adventofcode.com/2022/day/14) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2014/day14.cpp)
 ##### [--- Day 15: Beacon Exclusion Zone ---](https://adventofcode.com/2022/day/15) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2015/day15.cpp)
 ##### [--- Day 16: Proboscidea Volcanium ---](https://adventofcode.com/2022/day/16) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2016/day16.cpp)
-##### [--- Day 17: Pyroclastic Flow ---](https://adventofcode.com/2022/day/17) [(click here for my solution)]
-https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2017/day17.cpp
+##### [--- Day 17: Pyroclastic Flow ---](https://adventofcode.com/2022/day/17) [(click here for my solution)](https://github.com/RodicaMihaelaVasilescu/AdventOfCode2022/blob/main/Day%2017/day17.cpp)
 
 ![AdventOfCode](https://user-images.githubusercontent.com/41547572/204596284-95a2ad70-57a0-48ee-b32b-93be4d26ecb5.png)
